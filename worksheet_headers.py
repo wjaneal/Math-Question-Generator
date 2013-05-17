@@ -1,7 +1,7 @@
 #Worksheet headers for Automatic Question Generation
 
 class Header_File:
-  def __init__(self,filename, title,author,date,timestamp):
+	def __init__(self,filename, title,author,date,timestamp):
 		self.Title = title
 		self.Date = date
 		self.Author = author

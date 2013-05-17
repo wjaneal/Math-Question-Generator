@@ -15,6 +15,7 @@ class Question(QuestionForm):
 		self.Answer = int(self.Q1.Variables[0]) + int(self.Q1.Variables[1])
 		return [QuestionString, AnswerString]
 def Addition_Pairs():
+	print "Addition"
 	Range1 = NumberRange(0,10)
 	EquationString = "*+*="
 	NumVariables = CountStars(EquationString)
@@ -42,7 +43,7 @@ def Addition_Pairs_Plus_1():
 	AnswerString = QuestionString+"= "+str(Answer)
 	return [QuestionString, AnswerString]
 
-def Addition_to_12():
+def Simple_Addition():
 	Range1 = NumberRange(0,12)
 	EquationString = "*+*="
 	NumVariables = CountStars(EquationString)
@@ -96,6 +97,6 @@ def Vert_Addition_to_20():
 Num_Questions_Array = [0,69,69,69,69,69, 18]
 Num_Columns_Array = [0,3,3,3,3,3,3]
 Line_Length_Array = [75,75,75,75,75,0,0]
-Arith_QA_Function = {1:Addition_Pairs, 2:Addition_Pairs_Plus_1, 3:Addition_to_12, 4:Addition_to_15, 5:Addition_to_20, 6:Vert_Addition_to_20}
+Arith_QA_Function = {1:Addition_Pairs, 2:Addition_Pairs_Plus_1, 3:Simple_Addition, 4:Addition_to_15, 5:Addition_to_20, 6:Vert_Addition_to_20}
 Arith_Function_Name = {1:"Addition Pairs", 2:"Addition Pairs Plus One", 3:"Addition to 12", 4:"Addition to 15", 5:"Addition to 20", 6:"Vertical Addition to 20"}
 

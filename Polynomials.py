@@ -15,7 +15,7 @@ from math import *
 
 
 class Polynomial:
-  def __init__(self,order):	
+	def __init__(self,order):	
 		self.Order = order
 		self.Coefficients = self.Generate_Random_Coefficients(order)
 		self.Derivative = self.Differentiate(self.Coefficients)

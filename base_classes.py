@@ -6,6 +6,7 @@ class ApplicationData:
   def __init__(self):
 		self.Topics = ["Arithmetic", "Fractions", "Algebra I"]
 		self.SubTopics = [["Addition Pairs","Addition Pairs + 1","Simple Addition"], ["Greatest Common Divisor","Least Common Multiple","Fraction Addition"], ["Isolate Variable","Evaluate Expressions I","Squares and Square Roots"]]
+		self.SpecialCode = [["Addition_Pairs","addition_pairs_plus_one","Simple_Addition"],["gcd1","lcm1","fraction_addition_1"],["isolate","evaluate","squares_and_square_roots"]]
 		self.topicChoice = -1
 		self.subtopicChoice = -1
 
@@ -21,6 +22,15 @@ class SpecialProblemCode:
 		number = GetVariable("Integer", RangeSet)
 		AnswerArray = [number, number]
 		return AnswerArray		
+	def Simple_Addition(self, difficulty_level):
+		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
+                RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+                #Ensure that only one variable is chosen instead of two
+                N1 =  GetVariable("Integer", RangeSet)
+		N2 =  GetVariable("Integer", RangeSet)
+		Operator = "+"
+                AnswerArray = [Operator, N1, N2]
+                return AnswerArray
 		
 
 
@@ -49,29 +59,32 @@ class QuestionForm:
 		#for i in range(0,len(variable_set)):
 		#	self.Variables.append(GetVariable(variable_set[i],variable_range_set[i]))
 		SPC = SpecialProblemCode()
-		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level)}
+		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level)}
+		
+		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
 		self.Variables = GetVariablesFunction[special_code]
-		self.Format_String = "*"+self.Operator+"*= "
+		self.Format_String = "*"+self.Variables[0]+"*= "
 		self.Parsed_String = ""
 		self.SpecialCode = special_code
-		self.Answers = self.GetArithmeticAnswer(self.Variables,self.Operator)
+		self.Answers = self.GetArithmeticAnswer(self.Variables)
 		
 		print "New QF:", self.Variable_Set, self.Variables
 		
 	
-	def GetArithmeticAnswer(self, variables, operator):
+	def GetArithmeticAnswer(self, variables):
+		#variables[0] should be the arithmetic operator; [1] and [2] are the numbers
 		print operator, variables, ",,,,,,"
-		if operator == "+":
-			Answer = variables[0] + variables[1]
+		if variables[0] == "+":
+			Answer = variables[1] + variables[2]
 		
-		if operator == "-":
-			Answer = variables[0] - variables[1]
+		if variables[0] == "-":
+			Answer = variables[1] - variables[2]
 
-		if operator == "x":
-			Answer = variables[0] * variables[1]
+		if variables[0] == "x":
+			Answer = variables[1] * variables[2]
 
-		if operator == "/":
-			Answer = variables[0] / variables[1]
+		if variables[0] == "/":
+			Answer = variables[1] / variables[2]
 		return Answer
 
 	def Parse_Format_String(self,String1):

@@ -12,7 +12,7 @@ class simpleapp_tk(Tkinter.Tk):
 
     def initialize(self):
         self.grid()
-  self.geometry = ("800x600")
+	self.geometry = ("800x600")
 	self.TitleLabel = Tkinter.Label(text = "Topic", background = "white", font = "Arial 20 bold")
 	self.TitleLabel.grid(column=0,row=0,sticky = 'W')
 	self.Radiobuttons = []
@@ -73,13 +73,14 @@ class simpleapp_tk(Tkinter.Tk):
     def makeChoice(self):
         #Make a New Topic Here
 	self.T1 = base_classes.Topic(self.Data.Topics[self.Data.topicChoice])
-	#print self.T1.TopicName
-	self.T1.DifficultyLevel = self.Data.DifficultyLevel
-	
 	#Set the Difficulty Level
+	self.T1.DifficultyLevel = self.Data.DifficultyLevel
+
+	self.T1.AddProblems(self.Data.Topics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
+	print "Made a choice"
 	#Generate QuestionTypes
 	#Generate Questions	
-	pass
+       		
 
     #----------------------------------------------------------------------
     def onCloseOtherFrame(self, otherFrame):

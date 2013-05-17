@@ -3,7 +3,7 @@ from visual import *
 
 #Define Vector Magnitude Questions
 def Vector_Magnitude():
-  Range1 = NumberRange(-10,10)
+	Range1 = NumberRange(-10,10)
 	EquationString = "\\vec{a} = [*,*,*]"
 	NumVariables = CountStars(EquationString)
 	RangeSet = NumVariables*[Range1]
