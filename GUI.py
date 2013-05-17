@@ -76,11 +76,15 @@ class simpleapp_tk(Tkinter.Tk):
 	#Set the Difficulty Level
 	self.T1.DifficultyLevel = self.Data.DifficultyLevel
 
-	self.T1.AddProblems(self.Data.Topics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
+	self.T1.AddProblems(self.Data.SubTopics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
 	print "Made a choice"
 	#Generate QuestionTypes
 	#Generate Questions	
-       		
+        print self.T1.Problems[0].QuestionForms[0].Format_String
+        print self.T1.Problems[0].QuestionForms[0].Answers
+	print self.T1.Problems[0].QuestionForms[0].Equation_String
+
+	print self.T1.Problems[0].ProblemName
 
     #----------------------------------------------------------------------
     def onCloseOtherFrame(self, otherFrame):

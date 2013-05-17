@@ -64,16 +64,15 @@ class QuestionForm:
 		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
 		self.Variables = GetVariablesFunction[special_code]
 		self.Format_String = "*"+self.Variables[0]+"*= "
-		self.Parsed_String = ""
+		self.Equation_String = self.Create_Equation_String(self.Format_String,self.Variables[1:],0)
 		self.SpecialCode = special_code
 		self.Answers = self.GetArithmeticAnswer(self.Variables)
 		
-		print "New QF:", self.Variable_Set, self.Variables
+		#print "New QF:", self.Variable_Set, self.Variables
 		
 	
 	def GetArithmeticAnswer(self, variables):
 		#variables[0] should be the arithmetic operator; [1] and [2] are the numbers
-		print operator, variables, ",,,,,,"
 		if variables[0] == "+":
 			Answer = variables[1] + variables[2]
 		
