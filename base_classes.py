@@ -19,12 +19,14 @@ class SpecialProblemCode:
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		print RangeSet
 		#Ensure that only one variable is chosen instead of two
+		self.NumQuestions = 20
 		number = GetVariable("Integer", RangeSet)
 		AnswerArray = [number, number]
 		return AnswerArray		
 	def Simple_Addition(self, difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		self.NumQuestions = 20
                 #Ensure that only one variable is chosen instead of two
                 N1 =  GetVariable("Integer", RangeSet)
 		N2 =  GetVariable("Integer", RangeSet)
