@@ -76,7 +76,12 @@ class simpleapp_tk(Tkinter.Tk):
 	#Set the Difficulty Level
 	self.T1.DifficultyLevel = self.Data.DifficultyLevel
 	#Add questions here according to the number specified for the problem type.
-	self.T1.AddProblems(self.Data.SubTopics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
+	#Problem Here - define Special Problem Code at the Level of Topic Instead.\
+	#This will allow for more smooth handling of data.
+	#Retrieve from either a textbox or an object within the hierarchy
+	self.T1.NumQuestions=20
+	for i in range(0, self.T1.NumQuestions):
+		self.T1.AddProblems(self.Data.SubTopics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
 	print "Made a choice"
 	#Generate QuestionTypes
 	#Generate Questions	
@@ -85,6 +90,7 @@ class simpleapp_tk(Tkinter.Tk):
 	for i1 in range(0,len(self.T1.Problems)):
 		for i2 in range(0,len(self.T1.Problems[i1].QuestionForms)):
 			print self.T1.Problems[i1].QuestionForms[i2].Equation_String
+			print self.T1.Problems[i1].QuestionForms[i2].Answers
 
 	#print self.T1.Problems[0].ProblemName
 

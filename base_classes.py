@@ -11,6 +11,7 @@ class ApplicationData:
 		self.subtopicChoice = -1
 
 #Eventually: Export the Special Problem Code to a separate module
+#Let SpecialProblemCode Pass OBJECTS....
 class SpecialProblemCode:
 #This class collects special functions associated with each type of problem
 	#Instead of a range set, receive a difficulty level here, mapping it to a range set with a dictionary
@@ -31,6 +32,7 @@ class SpecialProblemCode:
                 N1 =  GetVariable("Integer", RangeSet)
 		N2 =  GetVariable("Integer", RangeSet)
 		Operator = "+"
+		#Perhaps define an object to return - with the number of questions included
                 AnswerArray = [Operator, N1, N2]
                 return AnswerArray
 		
@@ -41,7 +43,7 @@ class Topic:
 		self.TopicName = name
 		self.Problems = []
 		self.questions_per_line = 0
-
+		self.SPC = SpecialProblemCode()
 	def AddProblems(self, name, difficulty_level,special_code):
 		self.Problems.append(Problem(name,difficulty_level,special_code))
 
@@ -52,6 +54,7 @@ class Problem:
 		self.QuestionForms = []
 		#Add different types of question forms later using some over-riding
 		self.QuestionForms.append(QuestionForm(difficulty_level,special_code))
+		SPC_Problem = SpecialProblemCode()
 		
 class QuestionForm:
 	def __init__(self, difficulty_level,special_code):
@@ -60,6 +63,8 @@ class QuestionForm:
 		#Execute special code here for each question type? Variables need to be selected according to requirements for each section.
 		#for i in range(0,len(variable_set)):
 		#	self.Variables.append(GetVariable(variable_set[i],variable_range_set[i]))
+		#This is to be removed??? - causes difficulties when defined low in the 
+		#object hierarchy.
 		SPC = SpecialProblemCode()
 		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level)}
 		
