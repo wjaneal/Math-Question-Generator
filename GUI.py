@@ -2,6 +2,20 @@ import tkMessageBox
 import Tkinter
 
 import base_classes
+from worksheet_headers import *
+
+import os
+from time import *
+from datetime import *
+
+#The following should somehow be fixed to be automated and incorporated into objects...
+Modules_List = ["Arith"]
+CurrentModule = 0
+#CurrentModule = "Fract"
+#CurrentModule = "Vecto"
+#CurrentModule = "Polyn"
+#CurrentModule = "Calcu"
+
 
 
 class simpleapp_tk(Tkinter.Tk):
@@ -69,6 +83,54 @@ class simpleapp_tk(Tkinter.Tk):
 
         closeButton = Tkinter.Button(otherFrame, text="Close", command=handler, background = "orange", font = "Arial 20 bold")
 	closeButton.grid(row = len(self.Data.SubTopics[self.Data.topicChoice])+5, column=0,sticky = "W")
+
+    #Function to read and return the contents of a file.
+    def FileGetContents(self, filename):
+	with open(filename) as a_file:
+	    return a_file.read()
+
+
+    def generateWorksheet(self, QuestionSet):
+	self.Questions = []
+	self.Answers = []
+	self.NumQuestions = len(QuestionSet)
+	self.NumColumns = 2
+	self.LineLength = 125
+	#Get the CurrentDate
+        CurrentDate = str(date.today())
+        #Generate a timestamp
+        TimeStamp = localtime()
+	#...Include a mechanism to optionally import file details from the GUI...
+        '''Header = Header_File("Worksheet_header.txt","London International Academy - Mathematics Worksheet", "Mathematics and Science Department", CurrentDate)
+        Header.Write_Header()'''
+        Header = Header_File("Worksheet_header.txt", "White Oaks Institute - Mathematics Worksheet", "Arithmetic", CurrentDate,TimeStamp)
+        Header.Write_Header()
+	header = "./Worksheet_header.txt"
+	footer = "./footer.txt"
+#...Rewrite to access new object structure...
+        for i in range(0,self.NumQuestions):
+	    self.Questions.append(QuestionSet[i].QuestionForms[0].Format_String)
+	    self.Answers.append(QuestionSet[i].QuestionForms[0].Answers)
+	print self.Questions
+	print self.Answers
+	#Generate the Latex File
+	Equations = "\\begin{multicols}{"+str(self.NumColumns)+"}"
+	for i in range(0,self.NumQuestions-1):
+		Equations += "("+str(i+1)+") "+self.Questions[i] + "\line(1,0){"+str(self.LineLength)+"}\\\\\\\\"
+	Equations += "("+str(self.NumQuestions)+")"+self.Questions[self.NumQuestions-1]+"\line(1,0){"+str(self.LineLength)+"}"
+	Equations += "\end{multicols}"
+	Header = self.FileGetContents(header)
+	Footer = self.FileGetContents(footer)
+
+	#Equations = "\\begin{tabluar}\\\\"
+	#Equations = ""
+	FileName = Modules_List[CurrentModule]+"_quest_"+str(self.T1.TopicName)+".tex"
+	if not os.path.isdir(Modules_List[CurrentModule]):
+		os.makedirs(Modules_List[CurrentModule])
+	f = open( "./"+Modules_List[CurrentModule]+"/"+FileName, 'w' )
+	f.write( Header+Equations+Footer )
+	f.close()
+
 		
     def makeChoice(self):
         #Make a New Topic Here
@@ -91,9 +153,9 @@ class simpleapp_tk(Tkinter.Tk):
 		for i2 in range(0,len(self.T1.Problems[i1].QuestionForms)):
 			print self.T1.Problems[i1].QuestionForms[i2].Equation_String
 			print self.T1.Problems[i1].QuestionForms[i2].Answers
-
-	#print self.T1.Problems[0].ProblemName
-
+	self.generateWorksheet(self.T1.Problems)
+	#Generate Header + Content + Footer and save as a .tex file
+	#Convert the .tex file to a .pdf file
     #----------------------------------------------------------------------
     def onCloseOtherFrame(self, otherFrame):
         """"""
