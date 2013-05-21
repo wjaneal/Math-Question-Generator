@@ -109,7 +109,7 @@ class simpleapp_tk(Tkinter.Tk):
 	footer = "./footer.txt"
 #...Rewrite to access new object structure...
         for i in range(0,self.NumQuestions):
-	    self.Questions.append(QuestionSet[i].QuestionForms[0].Format_String)
+	    self.Questions.append(QuestionSet[i].QuestionForms[0].Equation_String)
 	    self.Answers.append(QuestionSet[i].QuestionForms[0].Answers)
 	print self.Questions
 	print self.Answers
@@ -132,6 +132,19 @@ class simpleapp_tk(Tkinter.Tk):
 	f.close()
 
 		
+	Equations = "\\begin{multicols}{"+str(self.NumColumns)+"}"
+        for i in range(0,self.NumQuestions-1):
+                Equations += "("+str(i+1)+") "+ str(self.Answers[i]) + "\\\\"
+        Equations += "("+str(self.NumQuestions)+")"+str(self.Answers[self.NumQuestions-1])
+        Equations += "\end{multicols}"
+        Header = self.FileGetContents(header)
+        Footer = self.FileGetContents(footer)
+        #form1 = QuestionForm(string1)
+        FileName = Modules_List[CurrentModule]+"_answers_"+str(self.T1.TopicName)+".tex"
+        f = open( "./"+Modules_List[CurrentModule]+"/"+FileName, 'w' )
+        f.write( Header+Equations+Footer )
+        f.close()
+
     def makeChoice(self):
         #Make a New Topic Here
 	self.T1 = base_classes.Topic(self.Data.Topics[self.Data.topicChoice])
