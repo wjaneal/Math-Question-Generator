@@ -2,6 +2,7 @@
 #Base Classes for Python Automatic Question Generation Program
 ##########################################################################
 from random import *
+from fractions import *
 class ApplicationData:
   def __init__(self):
 		self.Topics = ["Arithmetic", "Fractions", "Algebra I"]
@@ -35,7 +36,15 @@ class SpecialProblemCode:
 		#Perhaps define an object to return - with the number of questions included
                 AnswerArray = [Operator, N1, N2]
                 return AnswerArray
-		
+	def Fraction_Addition_1(self, difficulty_level):
+		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
+		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		N1 =  GetVariable("Fraction", RangeSet)
+                N2 =  GetVariable("Fraction", RangeSet)
+                Operator = "+"
+                #Perhaps define an object to return - with the number of questions included
+                AnswerArray = [Operator, N1, N2]
+                return AnswerArray
 
 
 class Topic:
@@ -66,7 +75,7 @@ class QuestionForm:
 		#This is to be removed??? - causes difficulties when defined low in the 
 		#object hierarchy.
 		SPC = SpecialProblemCode()
-		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level)}
+		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"fraction_addition_1":SPC.Fraction_Addition_1(self.Difficulty_Level)}
 		
 		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
 		self.Variables = GetVariablesFunction[special_code]
@@ -150,6 +159,12 @@ def GetVariable(VariableType, RangeSet, notallowed=False):
 	if VariableType == "Integer":
 		#Incorporate a notallowed routine here checking individual numbers and ranges of numbers
 		return randint(RangeSet.Minimum, RangeSet.Maximum)
+	elif VariableType == "Fraction":
+		a1 = randint(RangeSet.Minimum, RangeSet.Maximum)
+		a2 = 0
+		while a2 == 0:
+			a2 = randint(RangeSet.Minimum, RangeSet.Maximum)
+		return Fraction(a1,a2)
 	else:
 		return uniform(RangeSet.Minimum, RangeSet.Maximum)
 

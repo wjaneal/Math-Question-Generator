@@ -157,7 +157,7 @@ class simpleapp_tk(Tkinter.Tk):
 	self.T1.NumQuestions=20
 	for i in range(0, self.T1.NumQuestions):
 		self.T1.AddProblems(self.Data.SubTopics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
-	print "Made a choice"
+	print "Made a choice", self.Data.subtopicChoice, self.Data.topicChoice
 	#Generate QuestionTypes
 	#Generate Questions	
         print self.T1.Problems[0].QuestionForms[0].Format_String
