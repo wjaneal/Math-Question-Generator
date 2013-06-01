@@ -5,11 +5,14 @@ from random import *
 from fractions import *
 class ApplicationData:
   def __init__(self):
-		self.Topics = ["Arithmetic", "Fractions", "Algebra I"]
-		self.SubTopics = [["Addition Pairs","Addition Pairs + 1","Simple Addition"], ["Greatest Common Divisor","Least Common Multiple","Fraction Addition"], ["Isolate Variable","Evaluate Expressions I","Squares and Square Roots"]]
-		self.SpecialCode = [["Addition_Pairs","addition_pairs_plus_one","Simple_Addition"],["gcd1","lcm1","fraction_addition_1"],["isolate","evaluate","squares_and_square_roots"]]
+		self.Topics = ["Arithmetic", "Fractions", "Algebra I","Quadratic Equations"]
+		self.SubTopics = [["Addition Pairs","Addition Pairs + 1","Simple Addition"], ["Greatest Common Divisor","Least Common Multiple","Fraction Addition"], ["Isolate Variable","Evaluate Expressions I","Squares and Square Roots"],["Number of Roots", "Factor Quadratic Expressions", "Find Vertex"]]
+		self.SpecialCode = [["Addition_Pairs","addition_pairs_plus_one","Simple_Addition"],["gcd1","lcm1","fraction_addition_1"],["isolate","evaluate","squares_and_square_roots"],["Number_of_Roots", "Factor_Quadratic_Expressions", "Find_Vertex"]]
 		self.topicChoice = -1
 		self.subtopicChoice = -1
+class AnswerObject:
+	def __init__(self): 
+		pass
 
 #Eventually: Export the Special Problem Code to a separate module
 #Let SpecialProblemCode Pass OBJECTS....
@@ -20,32 +23,69 @@ class SpecialProblemCode:
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		print RangeSet
+		AO = AnswerObject()
 		#Ensure that only one variable is chosen instead of two
 		self.NumQuestions = 20
-		number = GetVariable("Integer", RangeSet)
-		AnswerArray = [number, number]
-		return AnswerArray		
+		AO.N = []
+		AO.N.append(GetVariable("Integer", RangeSet))
+		AO.N.append(AO.N[0])
+		AO.Latex = "* + *"
+		AO.Answer = 2*AO.N[0]
+		return AO		
 	def Simple_Addition(self, difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		self.NumQuestions = 20
-                #Ensure that only one variable is chosen instead of two
-                N1 =  GetVariable("Integer", RangeSet)
-		N2 =  GetVariable("Integer", RangeSet)
-		Operator = "+"
+		AO = AnswerObject()
+		AO.N = []
+		for i in range(0,2):
+			AO.N.append(GetVariable("Integer", RangeSet))
+		AO.Operator = "+"
 		#Perhaps define an object to return - with the number of questions included
-                AnswerArray = [Operator, N1, N2]
-                return AnswerArray
+		AO.Latex = "*+*="
+		#AO.AdjustSign: Adjust Addition Operator for negative numbers
+		AO.AdjustSign = False
+                return AO
 	def Fraction_Addition_1(self, difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
-		N1 =  GetVariable("Fraction", RangeSet)
-                N2 =  GetVariable("Fraction", RangeSet)
-                Operator = "+"
-                #Perhaps define an object to return - with the number of questions included
-                AnswerArray = [Operator, N1, N2]
-                return AnswerArray
+		AO = AnswerObject()
+		AO.N = []
+		for i in range(0,2):
+			AO.N.append(GetVariable("Fraction", RangeSet))
+		if AO.N[1].numerator*AO.N[1].denominator >= 0:
+			sign = "+"
+		else:
+			sign = "-"
+		AO.Latex = "\\frac{"+str(AO.N[0].numerator) +"}{"+str(AO.N[0].denominator)+"}"+sign+"\\frac{"+str(AO.N[1].numerator) +"}{"+str(AO.N[1].denominator)+"}"
+                AO.Operator = "+"
+		AO.Answer = AO.N[0] + AO.N[1]
+                return AO
 
+
+	def Number_of_Roots(self, difficulty_level):
+		Difficulty_Lookup = {0:(-10,10),1:(-100,100)}
+		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		AO = AnswerObject()
+		AO.Latex = "* x^2 * x *"
+		AO.N = []
+		AO.Operator = ""
+		if difficulty_level == 0:
+			VariableType = "Integer"
+		else:
+			VariableType = "Float"
+		for i in range(0,3):
+			AO.N.append(GetVariable(VariableType, RangeSet))
+		AO.Latex = self.Create_Equation_String(AO.Latex, AO.N,1)
+		Delta = AO.N[1]*AO.N[1]-4*AO.N[0]*AO.N[2]
+		if Delta > 0:
+			AO.Answer = 2
+		elif Delta == 0:
+			AO.Answer = 1
+		else:
+			AO.Answer = 0
+		return AO
+		
 
 class Topic:
 	def __init__(self,name):
@@ -75,14 +115,14 @@ class QuestionForm:
 		#This is to be removed??? - causes difficulties when defined low in the 
 		#object hierarchy.
 		SPC = SpecialProblemCode()
-		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"fraction_addition_1":SPC.Fraction_Addition_1(self.Difficulty_Level)}
+		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"fraction_addition_1":SPC.Fraction_Addition_1(self.Difficulty_Level),"Number_of_Roots":SPC.Number_of_Roots(self.Difficulty_Level)}
 		
 		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
-		self.Variables = GetVariablesFunction[special_code]
-		self.Format_String = "*"+self.Variables[0]+"*= "
-		self.Equation_String = self.Create_Equation_String(self.Format_String,self.Variables[1:],0)
+		self.ProblemObject = GetVariablesFunction[special_code]
+		self.Format_String = "*"+self.ProblemObject.Operator+"*= "
+		self.Equation_String = self.ProblemObject.Latex
 		self.SpecialCode = special_code
-		self.Answers = self.GetArithmeticAnswer(self.Variables)
+		self.Answers = self.ProblemObject.Answer
 		
 		#print "New QF:", self.Variable_Set, self.Variables
 		

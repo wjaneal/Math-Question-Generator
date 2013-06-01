@@ -62,12 +62,12 @@ class simpleapp_tk(Tkinter.Tk):
 	TitleLabel1.grid(row = 0, column=0, sticky = "W")
 	#Move this to base classes and beyond:
    	B = []
-	self.subtopicChoice = 0
-	self.stc = []
+	self.Data.subtopicChoice = 0
+	self.stc = Tkinter.IntVar() 
 
-        for i in range(0,len(self.Data.SubTopics[self.Data.topicChoice])):
-		self.stc.append(Tkinter.IntVar())
-                B.append(Tkinter.Checkbutton(otherFrame, text = self.Data.SubTopics[self.Data.topicChoice][i], variable = self.stc[i], onvalue=i, offvalue = -1, justify = 'right', background = 'white', borderwidth=0, highlightthickness=0, font =  "Arial 18"))
+	for i in range(0,len(self.Data.SubTopics[self.Data.topicChoice])):
+			#self.stc.append(Tkinter.IntVar())
+        		B.append(Tkinter.Checkbutton(otherFrame, text = self.Data.SubTopics[self.Data.topicChoice][i], variable = self.stc, onvalue=i, offvalue = -1, justify = 'right', background = 'white', borderwidth=0, highlightthickness=0, font =  "Arial 18"))
 
         print B
         for i in range(0, len(B)):
@@ -147,6 +147,7 @@ class simpleapp_tk(Tkinter.Tk):
 
     def makeChoice(self):
         #Make a New Topic Here
+	self.Data.subtopicChoice=self.stc.get()
 	self.T1 = base_classes.Topic(self.Data.Topics[self.Data.topicChoice])
 	#Set the Difficulty Level
 	self.T1.DifficultyLevel = self.Data.DifficultyLevel
@@ -155,6 +156,7 @@ class simpleapp_tk(Tkinter.Tk):
 	#This will allow for more smooth handling of data.
 	#Retrieve from either a textbox or an object within the hierarchy
 	self.T1.NumQuestions=20
+	print self.Data.topicChoice, self.Data.subtopicChoice
 	for i in range(0, self.T1.NumQuestions):
 		self.T1.AddProblems(self.Data.SubTopics[self.Data.topicChoice][self.Data.subtopicChoice], self.T1.DifficultyLevel, self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])
 	print "Made a choice", self.Data.subtopicChoice, self.Data.topicChoice
