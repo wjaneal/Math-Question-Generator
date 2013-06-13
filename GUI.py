@@ -5,11 +5,12 @@ import base_classes
 from worksheet_headers import *
 
 import os
+import subprocess
 from time import *
 from datetime import *
 
 #The following should somehow be fixed to be automated and incorporated into objects...
-Modules_List = ["Arith"]
+Modules_List = ["Arith","Fract","Polyn","Quadr", "Calcu"]
 CurrentModule = 0
 #CurrentModule = "Fract"
 #CurrentModule = "Vecto"
@@ -116,34 +117,37 @@ class simpleapp_tk(Tkinter.Tk):
 	#Generate the Latex File
 	Equations = "\\begin{multicols}{"+str(self.NumColumns)+"}"
 	for i in range(0,self.NumQuestions-1):
-		Equations += "("+str(i+1)+") "+self.Questions[i] + "\line(1,0){"+str(self.LineLength)+"}\\\\\\\\"
-	Equations += "("+str(self.NumQuestions)+")"+self.Questions[self.NumQuestions-1]+"\line(1,0){"+str(self.LineLength)+"}"
+		Equations += "("+str(i+1)+") $ "+self.Questions[i] + "$\hspace{3 mm}\line(1,0){"+str(self.LineLength)+"}\\\\\\\\"
+	Equations += "("+str(self.NumQuestions)+") $"+self.Questions[self.NumQuestions-1]+"$\line(1,0){"+str(self.LineLength)+"}"
 	Equations += "\end{multicols}"
 	Header = self.FileGetContents(header)
 	Footer = self.FileGetContents(footer)
 
 	#Equations = "\\begin{tabluar}\\\\"
 	#Equations = ""
-	FileName = Modules_List[CurrentModule]+"_quest_"+str(self.T1.TopicName)+".tex"
+	FileName = Modules_List[CurrentModule]+"_quest_"+str(self.Data.subtopicChoice)+".tex"
 	if not os.path.isdir(Modules_List[CurrentModule]):
 		os.makedirs(Modules_List[CurrentModule])
 	f = open( "./"+Modules_List[CurrentModule]+"/"+FileName, 'w' )
 	f.write( Header+Equations+Footer )
 	f.close()
+	os.system("pdflatex ./"+Modules_List[CurrentModule]+"/"+FileName+" -interaction nonstopmode -output-directory ./"+Modules_List[CurrentModule])
 
 		
 	Equations = "\\begin{multicols}{"+str(self.NumColumns)+"}"
         for i in range(0,self.NumQuestions-1):
-                Equations += "("+str(i+1)+") "+ str(self.Answers[i]) + "\\\\"
-        Equations += "("+str(self.NumQuestions)+")"+str(self.Answers[self.NumQuestions-1])
-        Equations += "\end{multicols}"
+                Equations += "("+str(i+1)+") $"+ str(self.Answers[i]) + "$\\\\"
+        Equations += "("+str(self.NumQuestions)+") $"+str(self.Answers[self.NumQuestions-1])
+        Equations += "$\end{multicols}"
         Header = self.FileGetContents(header)
         Footer = self.FileGetContents(footer)
         #form1 = QuestionForm(string1)
-        FileName = Modules_List[CurrentModule]+"_answers_"+str(self.T1.TopicName)+".tex"
+        FileName = Modules_List[CurrentModule]+"_answers_"+str(self.Data.subtopicChoice)+".tex"
         f = open( "./"+Modules_List[CurrentModule]+"/"+FileName, 'w' )
         f.write( Header+Equations+Footer )
         f.close()
+	os.system("pdflatex ./"+Modules_List[CurrentModule]+"/"+FileName+" -interaction nonstopmode -output-directory ./"+Modules_List[CurrentModule])
+
 
     def makeChoice(self):
         #Make a New Topic Here
@@ -162,12 +166,12 @@ class simpleapp_tk(Tkinter.Tk):
 	print "Made a choice", self.Data.subtopicChoice, self.Data.topicChoice
 	#Generate QuestionTypes
 	#Generate Questions	
-        print self.T1.Problems[0].QuestionForms[0].Format_String
-        print self.T1.Problems[0].QuestionForms[0].Answers
-	for i1 in range(0,len(self.T1.Problems)):
-		for i2 in range(0,len(self.T1.Problems[i1].QuestionForms)):
-			print self.T1.Problems[i1].QuestionForms[i2].Equation_String
-			print self.T1.Problems[i1].QuestionForms[i2].Answers
+        #print self.T1.Problems[0].QuestionForms[0].Format_String
+        #print self.T1.Problems[0].QuestionForms[0].Answers
+	#for i1 in range(0,len(self.T1.Problems)):
+		#for i2 in range(0,len(self.T1.Problems[i1].QuestionForms)):
+			#print self.T1.Problems[i1].QuestionForms[i2].Equation_String
+			#print self.T1.Problems[i1].QuestionForms[i2].Answers
 	self.generateWorksheet(self.T1.Problems)
 	#Generate Header + Content + Footer and save as a .tex file
 	#Convert the .tex file to a .pdf file

@@ -2,7 +2,8 @@
 \def\XCfiledate{2012/11/08}%
 \documentclass[letter]{article}
 \parindent 0pt
-\usepackage{array,multicol,multido,textcomp,amsmath,graphicx,hyperref,subfigure }
+\usepackage{array,multicol,multido,textcomp,amsmath,graphicx,hyperref,subfigure}
+
 \usepackage{xcolor}[2005/03/24]
 \usepackage[hmargin={1.25cm,.75cm},vmargin=1.25cm,footskip=.5cm,nohead]{geometry}
 \begin{document}

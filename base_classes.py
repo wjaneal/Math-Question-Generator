@@ -3,11 +3,16 @@
 ##########################################################################
 from random import *
 from fractions import *
+
+def lcm(a, b):
+	return (a * b) // gcd(a, b)
+	return reduce(lcm, numbers, 1)
+
 class ApplicationData:
   def __init__(self):
-		self.Topics = ["Arithmetic", "Fractions", "Algebra I","Quadratic Equations"]
+		self.Topics = ["Arithmetic", "Fractions", "Algebra I","Quadratic_Equations"]
 		self.SubTopics = [["Addition Pairs","Addition Pairs + 1","Simple Addition"], ["Greatest Common Divisor","Least Common Multiple","Fraction Addition"], ["Isolate Variable","Evaluate Expressions I","Squares and Square Roots"],["Number of Roots", "Factor Quadratic Expressions", "Find Vertex"]]
-		self.SpecialCode = [["Addition_Pairs","addition_pairs_plus_one","Simple_Addition"],["gcd1","lcm1","fraction_addition_1"],["isolate","evaluate","squares_and_square_roots"],["Number_of_Roots", "Factor_Quadratic_Expressions", "Find_Vertex"]]
+		self.SpecialCode = [["Addition_Pairs","Addition_Pairs_Plus_One","Simple_Addition"],["Greatest_Common_Divisor","Lowest_Common_Multiple","Fraction_Addition"],["Isolate","Evaluate","Squares_and_Square_roots"],["Number_of_Roots", "Factor_Quadratic_Expressions", "Find_Vertex"]]
 		self.topicChoice = -1
 		self.subtopicChoice = -1
 class AnswerObject:
@@ -31,7 +36,25 @@ class SpecialProblemCode:
 		AO.N.append(AO.N[0])
 		AO.Latex = "* + *"
 		AO.Answer = 2*AO.N[0]
+		AO.Operator = "+"
 		return AO		
+	def Addition_Pairs_Plus_One(self, difficulty_level):
+		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
+                RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+                print RangeSet
+                AO = AnswerObject()
+                #Ensure that only one variable is chosen instead of two
+                self.NumQuestions = 20
+                AO.N = []
+                AO.N.append(GetVariable("Integer", RangeSet))
+                AO.N.append(AO.N[0]+1)
+                AO.Latex = "* + *"
+                AO.Answer = 2*AO.N[0]+1
+                AO.Operator = "+"
+                return AO
+
+
+
 	def Simple_Addition(self, difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
@@ -45,9 +68,43 @@ class SpecialProblemCode:
 		AO.Latex = "*+*="
 		#AO.AdjustSign: Adjust Addition Operator for negative numbers
 		AO.AdjustSign = False
+		AO.Answer = sum(AO.N)
                 return AO
-	def Fraction_Addition_1(self, difficulty_level):
-		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
+###################################################################################################################
+# Fractions
+###################################################################################################################
+
+	def Greatest_Common_Divisor(self, difficulty_level):
+		Difficulty_Lookup = {0:(2,10), 1:(2,12), 2:(2,15)}
+		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		self.NumQuestions = 20
+		AO = AnswerObject()
+		AO.N = []
+		q = GetVariable("Integer", RangeSet)
+		for i in range(0,2):
+			AO.N.append(GetVariable("Integer", RangeSet)*q)
+		AO.Operator = "" 
+		AO. Latex = "GCD( * , * )"
+		AO.AdjustSign = False
+		AO.Answer = gcd(AO.N[0], AO.N[1])
+		return AO
+
+	def Least_Common_Multiple(self, difficulty_level):
+		Difficulty_Lookup = {0:(2,10), 1:(2,12), 2:(2,15)}
+		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		self.NumQuestions = 20
+		AO = AnswerObject()
+		AO.N = []
+		for i in range(0,2):
+			AO.N.append(GetVariable("Integer", RangeSet))
+		AO.Operator = "" 
+		AO. Latex = "LCM( * , * )"
+		AO.AdjustSign = False
+		AO.Answer = lcm(AO.N[0], AO.N[1])
+		return AO
+
+	def Fraction_Addition(self, difficulty_level):
+		Difficulty_Lookup = {0:(2,5),1:(2,8),2:(2,10),3:(2,12),4:(2,15),5:(2,20)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		AO = AnswerObject()
 		AO.N = []
@@ -67,7 +124,7 @@ class SpecialProblemCode:
 		Difficulty_Lookup = {0:(-10,10),1:(-100,100)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		AO = AnswerObject()
-		AO.Latex = "* x^2 * x *"
+		AO.Latex = "* x^2 * x * "
 		AO.N = []
 		AO.Operator = ""
 		if difficulty_level == 0:
@@ -76,7 +133,6 @@ class SpecialProblemCode:
 			VariableType = "Float"
 		for i in range(0,3):
 			AO.N.append(GetVariable(VariableType, RangeSet))
-		AO.Latex = self.Create_Equation_String(AO.Latex, AO.N,1)
 		Delta = AO.N[1]*AO.N[1]-4*AO.N[0]*AO.N[2]
 		if Delta > 0:
 			AO.Answer = 2
@@ -86,6 +142,11 @@ class SpecialProblemCode:
 			AO.Answer = 0
 		return AO
 		
+	def Factor_Quadratic_Expressions(self,difficulty_level):
+		pass
+
+	
+
 
 class Topic:
 	def __init__(self,name):
@@ -115,15 +176,20 @@ class QuestionForm:
 		#This is to be removed??? - causes difficulties when defined low in the 
 		#object hierarchy.
 		SPC = SpecialProblemCode()
-		GetVariablesFunction = {"addition_pairs_SC": SPC.addition_pairs_SC(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"fraction_addition_1":SPC.Fraction_Addition_1(self.Difficulty_Level),"Number_of_Roots":SPC.Number_of_Roots(self.Difficulty_Level)}
+		GetVariablesFunction = {"Addition_Pairs": SPC.addition_pairs_SC(self.Difficulty_Level), "Addition_Pairs_Plus_One":SPC.Addition_Pairs_Plus_One(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"Number_of_Roots":SPC.Number_of_Roots(self.Difficulty_Level), "Factor_Quadratic_Expressions":SPC.Factor_Quadratic_Expressions(self.Difficulty_Level), "Greatest_Common_Divisor": SPC.Greatest_Common_Divisor(self.Difficulty_Level), "Lowest_Common_Multiple":SPC.Least_Common_Multiple(self.Difficulty_Level), "Fraction_Addition": SPC.Fraction_Addition(self.Difficulty_Level)}
 		
 		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
 		self.ProblemObject = GetVariablesFunction[special_code]
-		self.Format_String = "*"+self.ProblemObject.Operator+"*= "
-		self.Equation_String = self.ProblemObject.Latex
+		#The following code appears relevant only for arithmetic questions...
+		if self.ProblemObject.Operator in ("+", "-", "*", "/"):
+			self.Format_String = "*"+self.ProblemObject.Operator+"*= "
+			self.Equation_String = self.Create_Equation_String(self.Format_String, self.ProblemObject.N,0)
+		if self.ProblemObject.Operator == "":
+			self.Format_String = self.ProblemObject.Latex
+			self.Equation_String = self.Create_Equation_String(self.Format_String, self.ProblemObject.N,1)
 		self.SpecialCode = special_code
 		self.Answers = self.ProblemObject.Answer
-		
+			
 		#print "New QF:", self.Variable_Set, self.Variables
 		
 	
@@ -202,7 +268,7 @@ def GetVariable(VariableType, RangeSet, notallowed=False):
 	elif VariableType == "Fraction":
 		a1 = randint(RangeSet.Minimum, RangeSet.Maximum)
 		a2 = 0
-		while a2 == 0:
+		while a2 == 0 and a2 <> a1:
 			a2 = randint(RangeSet.Minimum, RangeSet.Maximum)
 		return Fraction(a1,a2)
 	else:
