@@ -136,8 +136,16 @@ class simpleapp_tk(Tkinter.Tk):
 		
 	Equations = "\\begin{multicols}{"+str(self.NumColumns)+"}"
         for i in range(0,self.NumQuestions-1):
-                Equations += "("+str(i+1)+") $"+ str(self.Answers[i]) + "$\\\\"
-        Equations += "("+str(self.NumQuestions)+") $"+str(self.Answers[self.NumQuestions-1])
+		if len(self.Answers[i])==2:
+			Answer = str(self.Answers[i][0]) + "\hspace{3 mm} and \hspace{3 mm} "+str(self.Answers[i][1])
+		else:
+			Answer = str(self.Answers[i])
+                Equations += "("+str(i+1)+") $"+ Answer + "$\\\\"
+	if len(self.Answers[self.NumQuestions-1])==2:
+		Answer = str(self.Answers[self.NumQuestions-1])
+	else:
+		Answer = str(self.Answers[self.NumQuestions-1])
+        Equations += "("+str(self.NumQuestions)+") $"+str(Answer)
         Equations += "$\end{multicols}"
         Header = self.FileGetContents(header)
         Footer = self.FileGetContents(footer)

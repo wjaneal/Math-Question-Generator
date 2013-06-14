@@ -1,5 +1,5 @@
 \def\XCfileversion{v0.1}%
-\def\XCfiledate{2013-06-12}%
+\def\XCfiledate{2013-06-14}%
 \documentclass[letter]{article}
 \usepackage{array,multicol,multido,textcomp,amsmath,graphicx,hyperref,subfigure,underscore}
 \usepackage{xcolor}[2005/03/24]
