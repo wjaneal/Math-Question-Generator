@@ -9,14 +9,19 @@ import subprocess
 from time import *
 from datetime import *
 
+
+import inspect
+
+#Get a list of the Problem Types to AutoMatically Generate Menus
+#print Problems
+
 #The following should somehow be fixed to be automated and incorporated into objects...
-Modules_List = ["Arith","Fract","Polyn","Quadr", "Calcu"]
+TopicLookup = {"AR":"Arithmetic","QU":"Quadratic Functions","CA":"Calculus","FR":"Fractions","VE": "Vectors"}
 CurrentModule = 0
 #CurrentModule = "Fract"
 #CurrentModule = "Vecto"
 #CurrentModule = "Polyn"
 #CurrentModule = "Calcu"
-
 
 
 class simpleapp_tk(Tkinter.Tk):
@@ -35,6 +40,18 @@ class simpleapp_tk(Tkinter.Tk):
 	self.Data = base_classes.ApplicationData()
 	B = []
 	self.tc = Tkinter.IntVar()
+	#////////////////////////////////////////////////////////////////////
+	#Generate Menus from Functions in Special Problem Code Class:
+	#////////////////////////////////////////////////////////////////////
+	SPC = base_classes.SpecialProblemCode()
+	self.ProblemNames = inspect.getmembers(SPC, predicate=inspect.ismethod)
+	self.Data.Topics = []
+	#Parse Names of Problems; sort into 2D list by two letter prefix
+	for i in range (0, len(self.ProblemNames)):
+		if self.ProblemNames[i][0] != '__init__':
+			if TopicLookup[self.ProblemNames[i][0][:2]] not in self.Data.Topics:			
+				self.Data.Topics.append(TopicLookup[self.ProblemNames[i][0][:2]])
+	print self.Data.Topics
 	for i in range(0,len(self.Data.Topics)):
 		B.append(Tkinter.Radiobutton(self, text = self.Data.Topics[i], variable = self.tc, value=i, justify = 'right', background = 'white', borderwidth=0, highlightthickness=0, font = "Arial 18"))
 	print B
@@ -65,10 +82,17 @@ class simpleapp_tk(Tkinter.Tk):
    	B = []
 	self.Data.subtopicChoice = 0
 	self.stc = Tkinter.IntVar() 
-
-	for i in range(0,len(self.Data.SubTopics[self.Data.topicChoice])):
+	#####################################################################################
+	# subTopic Names
+	#####################################################################################
+	self.Data.SubTopics = []
+	for i in range(0,len(self.ProblemNames)):
+		if self.ProblemNames[i][0] != "__init__" and TopicLookup[self.ProblemNames[i][0][:2]] == self.Data.Topics[self.Data.topicChoice]:
+			self.Data.SubTopics.append(self.ProblemNames[i][0][2:])
+	print self.Data.SubTopics
+	for i in range(0,len(self.Data.SubTopics)):
 			#self.stc.append(Tkinter.IntVar())
-        		B.append(Tkinter.Checkbutton(otherFrame, text = self.Data.SubTopics[self.Data.topicChoice][i], variable = self.stc, onvalue=i, offvalue = -1, justify = 'right', background = 'white', borderwidth=0, highlightthickness=0, font =  "Arial 18"))
+        		B.append(Tkinter.Checkbutton(otherFrame, text = self.Data.SubTopics[i], variable = self.stc, onvalue=i, offvalue = -1, justify = 'right', background = 'white', borderwidth=0, highlightthickness=0, font =  "Arial 18"))
 
         print B
         for i in range(0, len(B)):
@@ -125,7 +149,9 @@ class simpleapp_tk(Tkinter.Tk):
 
 	#Equations = "\\begin{tabluar}\\\\"
 	#Equations = ""
-	FileName = Modules_List[CurrentModule]+"_quest_"+str(self.Data.subtopicChoice)+".tex"
+	print CurrentModule
+	print self.Data.subtopicChoice
+	FileName = Modules_List[CurrentModule]+"_quest_"+str(self.Data.SpecialCode[self.Data.topicChoice][self.Data.subtopicChoice])+".tex"
 	if not os.path.isdir(Modules_List[CurrentModule]):
 		os.makedirs(Modules_List[CurrentModule])
 	f = open( "./"+Modules_List[CurrentModule]+"/"+FileName, 'w' )

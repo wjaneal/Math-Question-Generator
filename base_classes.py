@@ -4,25 +4,29 @@
 from random import *
 from fractions import *
 from math import *
+import inspect
 
 def lcm(a, b):
 	return (a * b) // gcd(a, b)
 	return reduce(lcm, numbers, 1)
 
 class ApplicationData:
-  def __init__(self):
-		self.Topics = ["Arithmetic", "Fractions", "Algebra I","Quadratic Equations"]
-		self.SubTopics = [["Addition Pairs","Addition Pairs + 1","Simple Addition"], ["Greatest Common Divisor","Least Common Multiple","Fraction Addition"], ["Isolate Variable","Evaluate Expressions I","Squares and Square Roots"],["Number of Roots", "Factor Quadratic Expressions", "Find Vertex", "Quadratic Formula"]]
-		self.SpecialCode = [["Addition_Pairs","Addition_Pairs_Plus_One","Simple_Addition"],["Greatest_Common_Divisor","Lowest_Common_Multiple","Fraction_Addition"],["Isolate","Evaluate","Squares_and_Square_roots"],["Number_of_Roots", "Factor_Quadratic_Expressions", "Find_Vertex", "Quadratic_Formula"]]
+	def __init__(self):
+		#self.Topics = ["Arithmetic", "Fractions", "Algebra I","Quadratic Equations"]
+		#self.SubTopics = [["Addition Pairs","Addition Pairs + 1","Simple Addition"], ["Greatest Common Divisor","Least Common Multiple","Fraction Addition"], ["Isolate Variable","Evaluate Expressions I","Squares and Square Roots"],["Number of Roots", "Factor Quadratic Expressions", "Find Vertex", "Quadratic Formula"]]
+		#self.SpecialCode = [["Addition_Pairs","Addition_Pairs_Plus_One","Simple_Addition"],["Greatest_Common_Divisor","Lowest_Common_Multiple","Fraction_Addition"],["Isolate","Evaluate","Squares_and_Square_roots"],["Number_of_Roots", "Factor_Quadratic_Expressions", "Find_Vertex", "Quadratic_Formula"]]
 		self.topicChoice = -1
 		self.subtopicChoice = -1
-class AnswerObject:
+
+
 	def __init__(self): 
 		pass
 
 #Eventually: Export the Special Problem Code to a separate module
 #Let SpecialProblemCode Pass OBJECTS....
 class SpecialProblemCode:
+	def __init__(self):
+		pass
 #This class collects special functions associated with each type of problem
 	#Instead of a range set, receive a difficulty level here, mapping it to a range set with a dictionary
 
@@ -31,7 +35,7 @@ class SpecialProblemCode:
 #####################################################################################################################
 
 
-	def addition_pairs_SC(self, difficulty_level):	
+	def AR_Addition_Pairs(self, difficulty_level):	
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		print RangeSet
@@ -45,7 +49,7 @@ class SpecialProblemCode:
 		AO.Answer = 2*AO.N[0]
 		AO.Operator = "+"
 		return AO		
-	def Addition_Pairs_Plus_One(self, difficulty_level):
+	def AR_Addition_Pairs_Plus_One(self, difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
                 print RangeSet
@@ -60,7 +64,7 @@ class SpecialProblemCode:
                 AO.Operator = "+"
                 return AO
 
-	def Simple_Addition(self, difficulty_level):
+	def AR_Simple_Addition(self, difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		self.NumQuestions = 20
@@ -76,11 +80,12 @@ class SpecialProblemCode:
 		AO.Answer = sum(AO.N)
                 return AO
 
-	def Vertical_Addition(self,difficulty_level):
+	def AR_Vertical_Addition(self,difficulty_level):
 		Difficulty_Lookup = {0:(0,5),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		self.NumQuestions = 20
 		AO = AnswerObject()
+		AO.N = []
 		for i in range(0,2):
 			AO.N.append(GetVariable("Integer", RangeSet))
 		AO.Operator = "+"
@@ -94,7 +99,7 @@ class SpecialProblemCode:
 # Fractions
 ###################################################################################################################
 
-	def Greatest_Common_Divisor(self, difficulty_level):
+	def FR_Greatest_Common_Divisor(self, difficulty_level):
 		Difficulty_Lookup = {0:(2,10), 1:(2,12), 2:(2,15)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		self.NumQuestions = 20
@@ -109,7 +114,7 @@ class SpecialProblemCode:
 		AO.Answer = gcd(AO.N[0], AO.N[1])
 		return AO
 
-	def Least_Common_Multiple(self, difficulty_level):
+	def FR_Least_Common_Multiple(self, difficulty_level):
 		Difficulty_Lookup = {0:(2,10), 1:(2,12), 2:(2,15)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		self.NumQuestions = 20
@@ -123,7 +128,7 @@ class SpecialProblemCode:
 		AO.Answer = lcm(AO.N[0], AO.N[1])
 		return AO
 
-	def Fraction_Addition(self, difficulty_level):
+	def FR_Fraction_Addition(self, difficulty_level):
 		Difficulty_Lookup = {0:(2,5),1:(2,8),2:(2,10),3:(2,12),4:(2,15),5:(2,20)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		AO = AnswerObject()
@@ -143,7 +148,7 @@ class SpecialProblemCode:
 ###################################################################################################################
 
 
-	def Number_of_Roots(self, difficulty_level):
+	def QU_Number_of_Roots(self, difficulty_level):
 		Difficulty_Lookup = {0:(-10,10),1:(-100,100)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
 		AO = AnswerObject()
@@ -165,7 +170,7 @@ class SpecialProblemCode:
 			AO.Answer = 0
 		return AO
 		
-	def Factor_Quadratic_Expressions(self,difficulty_level):
+	def QU_Factor_Quadratic_Expressions(self,difficulty_level):
 		#A = 1
 		Difficulty_Lookup = {0:(-10,10),1:(-12,12)}
 		RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
@@ -186,7 +191,7 @@ class SpecialProblemCode:
 		return AO
 
 
-	def Quadratic_Formula(self, difficulty_level):
+	def QU_Quadratic_Formula(self, difficulty_level):
 		Difficulty_Lookup = {0:(-10,10),1:(-12,12)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
                 AO = AnswerObject()
@@ -246,7 +251,14 @@ class QuestionForm:
 		#This is to be removed??? - causes difficulties when defined low in the 
 		#object hierarchy.
 		SPC = SpecialProblemCode()
-		GetVariablesFunction = {"Addition_Pairs": SPC.addition_pairs_SC(self.Difficulty_Level), "Addition_Pairs_Plus_One":SPC.Addition_Pairs_Plus_One(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"Number_of_Roots":SPC.Number_of_Roots(self.Difficulty_Level), "Factor_Quadratic_Expressions":SPC.Factor_Quadratic_Expressions(self.Difficulty_Level), "Greatest_Common_Divisor": SPC.Greatest_Common_Divisor(self.Difficulty_Level), "Lowest_Common_Multiple":SPC.Least_Common_Multiple(self.Difficulty_Level), "Fraction_Addition": SPC.Fraction_Addition(self.Difficulty_Level), "Quadratic_Formula":SPC.Quadratic_Formula(self.Difficulty_Level)}
+        	ProblemNames = inspect.getmembers(SPC, predicate=inspect.ismethod)
+		print ProblemNames
+		GetVariablesFunction = {}
+		for i in range(0,len(ProblemNames)):
+			if ProblemNames[i][0] != "__init__":
+				GetVariablesFunction[ProblemNames[i][0]] = ProblemNames[i][1](difficulty_level) 
+				print GetVariablesFunction
+	#GetVariablesFunction = {"Addition_Pairs": SPC.addition_pairs_SC(self.Difficulty_Level), "Addition_Pairs_Plus_One":SPC.Addition_Pairs_Plus_One(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"Number_of_Roots":SPC.Number_of_Roots(self.Difficulty_Level), "Factor_Quadratic_Expressions":SPC.Factor_Quadratic_Expressions(self.Difficulty_Level), "Greatest_Common_Divisor": SPC.Greatest_Common_Divisor(self.Difficulty_Level), "Lowest_Common_Multiple":SPC.Least_Common_Multiple(self.Difficulty_Level), "Fraction_Addition": SPC.Fraction_Addition(self.Difficulty_Level), "Quadratic_Formula":SPC.Quadratic_Formula(self.Difficulty_Level)}
 		
 		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
 		self.ProblemObject = GetVariablesFunction[special_code]
