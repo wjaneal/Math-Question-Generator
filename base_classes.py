@@ -18,7 +18,7 @@ class ApplicationData:
 		self.topicChoice = -1
 		self.subtopicChoice = -1
 
-
+class AnswerObject:
 	def __init__(self): 
 		pass
 
@@ -94,6 +94,21 @@ class SpecialProblemCode:
 		AO.AdjustSign = False
 		AO.Answer = sum(AO.N)
 		return AO
+
+	def AR_Multiplication(self,difficulty_level):
+                Difficulty_Lookup = {0:(0,10),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
+                RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+                self.NumQuestions = 20
+                AO = AnswerObject()
+                AO.N = []
+                for i in range(0,2):
+                        AO.N.append(GetVariable("Integer", RangeSet))
+                AO.Operator = "\\times"
+
+                AO.Latex =  "*X* = "
+                AO.AdjustSign = False
+                AO.Answer = AO.N[0]*AO.N[1]
+                return AO
 
 ###################################################################################################################
 # Fractions
@@ -252,18 +267,17 @@ class QuestionForm:
 		#object hierarchy.
 		SPC = SpecialProblemCode()
         	ProblemNames = inspect.getmembers(SPC, predicate=inspect.ismethod)
-		print ProblemNames
+		#print ProblemNames
 		GetVariablesFunction = {}
 		for i in range(0,len(ProblemNames)):
 			if ProblemNames[i][0] != "__init__":
 				GetVariablesFunction[ProblemNames[i][0]] = ProblemNames[i][1](difficulty_level) 
-				print GetVariablesFunction
 	#GetVariablesFunction = {"Addition_Pairs": SPC.addition_pairs_SC(self.Difficulty_Level), "Addition_Pairs_Plus_One":SPC.Addition_Pairs_Plus_One(self.Difficulty_Level), "Simple_Addition":SPC.Simple_Addition(self.Difficulty_Level),"Number_of_Roots":SPC.Number_of_Roots(self.Difficulty_Level), "Factor_Quadratic_Expressions":SPC.Factor_Quadratic_Expressions(self.Difficulty_Level), "Greatest_Common_Divisor": SPC.Greatest_Common_Divisor(self.Difficulty_Level), "Lowest_Common_Multiple":SPC.Least_Common_Multiple(self.Difficulty_Level), "Fraction_Addition": SPC.Fraction_Addition(self.Difficulty_Level), "Quadratic_Formula":SPC.Quadratic_Formula(self.Difficulty_Level)}
 		
 		#self.Variables is of the form [operator, Number1, Number2] The operator is arithmetic and in quotes. N1 and N2 are integers
 		self.ProblemObject = GetVariablesFunction[special_code]
 		#The following code appears relevant only for arithmetic questions...
-		if self.ProblemObject.Operator in ("+", "-", "*", "/"):
+		if self.ProblemObject.Operator in ("+", "-", "\\times", "/"):
 			self.Format_String = "*"+self.ProblemObject.Operator+"*= "
 			self.Equation_String = self.Create_Equation_String(self.Format_String, self.ProblemObject.N,0)
 		if self.ProblemObject.Operator == "":
@@ -283,7 +297,7 @@ class QuestionForm:
 		if variables[0] == "-":
 			Answer = variables[1] - variables[2]
 
-		if variables[0] == "x":
+		if variables[0] == "\\times":
 			Answer = variables[1] * variables[2]
 
 		if variables[0] == "/":
@@ -301,9 +315,9 @@ class QuestionForm:
 		print ParsedStringArray
 		ParsedString = ParsedStringArray[0]
 		for i in range(1,len(ParsedStringArray)):
-			'''print i, ".."
+			print i, ".."
 			print Variables, "..."
-			print Variables[i-1] '''
+			print Variables[i-1] 
 			Variable = Variables[i-1]
 			#Add in a + sign for positive outcomes
 			if SignFlag == 1:
@@ -331,7 +345,7 @@ class NumberRange:
 			self.Minimum = Min
 			self.Maximum = Max
 		self.NotAllowed = notallowed
-		print "The range has been initialized"
+		#print "The range has been initialized"
 
 
 ##########################################################################
@@ -343,7 +357,7 @@ def AllowedCheck(number,notallowed):
 
 def GetVariable(VariableType, RangeSet, notallowed=False):
 	#Return A Random Variable of the Given Type in the Given RangeSet.
-	print VariableType
+	#print VariableType
 	if VariableType == "Integer":
 		#Incorporate a notallowed routine here checking individual numbers and ranges of numbers
 		return randint(RangeSet.Minimum, RangeSet.Maximum)
