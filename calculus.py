@@ -1,6 +1,6 @@
 #Define Polynomial Differentiation Questions
 def Polynomial_Questions(order):
-  Range1 = NumberRange(-10,10)
+	Range1 = NumberRange(-10,10)
 	Equation_String = "(*x*)(*x*)"
 	NumVariables = CountStars(Equation_String)
 	RangeSet = NumVariables*[Range1]
