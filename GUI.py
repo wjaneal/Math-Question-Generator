@@ -18,9 +18,6 @@ import Tkinter
 #Modules containing background information
 import special_problem_code #Underlying mathematics problem functionality
 
-#Module to Generate Worksheets
-#from worksheet_generator import *
-
 import inspect #For compiling a list of problems from the functions in base_classes
 
 #########################################################################################
@@ -41,7 +38,7 @@ class TopicObject:
                                 self.TopicGenerator.append([i[0][:2], i[0][3:].replace("_"," ")])
                 print self.TopicGenerator
                 self.TopicCategoriesLookup = {}
-                self.TopicCategories = [["AR","Arithmetic"],["FR","Fractions"],["QU","Quadratic Functions"],["CA","Calculus"],["VE", "Vectors"]]
+                self.TopicCategories = [["AR","Arithmetic"],["FR","Fractions"],["QU","Quadratic Functions"],["CA","Calculus"],["VE", "Vectors"],["AL", "Algebra"]]
         
                 for item in self.TopicCategories:
                         self.TopicCategoriesLookup[item[0]] = item[1]
@@ -157,7 +154,7 @@ class simpleapp_tk(Tkinter.Tk):
             #print B
         for i in range(0, len(B)):
                 B[i].grid(column = 0, row = i+1, sticky = 'W')
-        D.grid(column = 0, row = len(B)+1, sticky = 'W')
+        D.grid(column = 2, row = len(B)+2, sticky = 'W')
         print "Testing 123;ssd", special_problem_code.Topic(self.Data.subTopics[self.Data.subtopicChoice]).TopicName[1]
         #Place Difficulty Level Pulldowns here.
         #Set Difficulty to 0 for Now

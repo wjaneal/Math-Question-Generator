@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License along with Mat
 
 from base_classes import *
 from arithmetic_functions import *
-
+#from Polynomials import *
 
 
 #This class collects special functions associated with each type of problem
@@ -131,7 +131,7 @@ class SpecialProblemCode:
                 return AO
 
         def AR_Multiplication(self,difficulty_level):
-                Difficulty_Lookup = {0:(0,10),1:(0,8),2:(0,10),3:(0,12),4:(0,15),5:(0,20)}
+                Difficulty_Lookup = {0:(2,10),1:(2,8),2:(2,10),3:(2,12),4:(2,15),5:(2,20)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
                 self.NumQuestions = 20
                 AO = AnswerObject()
@@ -146,6 +146,25 @@ class SpecialProblemCode:
                 AO.AdjustSign = False
                 AO.Answer = AO.N[0]*AO.N[1]
                 return AO
+
+        def AR_Percents(self,difficulty_level):
+                Difficulty_Lookup = {0:(2,10),1:(2,8),2:(2,10),3:(2,12),4:(2,15),5:(2,20)}
+                RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+                self.NumQuestions = 20
+                AO = AnswerObject()
+		AO.Title = "Percents"
+		AO.Instructions = "Convert the Given Fractions to Percentages"
+                AO.N = []
+                for i in range(0,2):
+                        AO.N.append(GetVariable("Integer", RangeSet))
+		if AO.N[1] < AO.N[0]:
+			temp = AO.N[0]
+			AO.N[0] = AO.N[1]
+			AO.N[1] = temp
+		AO.Operator = ""
+                AO.Latex =  "\\dfrac{"+str(AO.N[0])+"}{"+str(AO.N[1])+"}"
+		AO.Answer = (1.0*AO.N[0])/(1.0*AO.N[1])
+		return AO
 
 ###################################################################################################################
 # Fractions
@@ -224,6 +243,7 @@ class SpecialProblemCode:
         def QU_Number_of_Roots(self, difficulty_level):
                 Difficulty_Lookup = {0:(-10,10),1:(-100,100), 2:(-200,200), 3:(-250,250)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		self.NumQuestions = 20
                 AO = AnswerObject()
                 AO.Latex = "* x^2 * x * "
                 AO.N = []
@@ -250,7 +270,8 @@ class SpecialProblemCode:
                 #A = 1
                 Difficulty_Lookup = {0:(-10,10),1:(-12,12),2:(-15,15),3:(-18,18)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
-                AO = AnswerObject()
+		self.NumQuestions = 20                
+		AO = AnswerObject()
                 AO.Latex = "* x^2 * x * "
                 AO.N = []
 		AO.Title = "Factor Quadratic Expressions"
@@ -272,6 +293,7 @@ class SpecialProblemCode:
         def QU_Quadratic_Formula(self, difficulty_level):
                 Difficulty_Lookup = {0:(-10,10),1:(-12,12), 2:(-15,15), 3:(-18,18)}
                 RangeSet = NumberRange(Difficulty_Lookup[difficulty_level])
+		self.NumQuestions = 20
                 AO = AnswerObject()
                 AO.Latex = "* x^2 * x * "
                 AO.N = []
@@ -299,9 +321,24 @@ class SpecialProblemCode:
                         Root2 = (-B - sqrt(B**2-4*A*C))/(2*A)
                         AO.Answer = [Root1, Root2]
                 return AO
-
-
-
+##############################################################################################################
+# Algebra
+##############################################################################################################
+'''	def AL_Add_Polynomials(self, difficulty_level):
+		RangeSet = NumberRange(-10,10)
+		AO = AnswerObject()
+		AO.Latex = "* "
+		AO.Title = "Polynomials - Addition"
+		AO.Instructions = "Add the given polynomials"
+		AO.N = []
+		for i in range(0, difficulty_level+2):
+			AO.N.append(GetVariable("Integer", RangeSet))
+		PolyObject = Polynomial(difficulty_level+2)
+		B = PolyObject.Polynomial(difficulty_level+2)
+		AO.Answer = PolyAdd(A,B)
+		AO.AnswerLatex = GenerateLatexString(AO.Answer)
+		return AO
+'''
 class ApplicationData:
         def __init__(self):
                 self.topicChoice = -1

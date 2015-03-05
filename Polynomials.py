@@ -103,7 +103,7 @@ class Polynomial:
 		for i in range(1, len(self.Roots)):			
 			self.Coefficients = self.PolyMult(self.Coefficients,[-self.Roots[i],1])
 			print self.Coefficients
-		print self.Coefficients
+		return self.Coefficients
 	
 	def Generate_Random_Coefficients(self,order):
 		A = []
