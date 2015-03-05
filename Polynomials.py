@@ -27,9 +27,12 @@ from math import *
 
 
 class Polynomial:
-	def __init__(self,order):	
+	def __init__(self,order, coefficients=[]):	
 		self.Order = order
-		self.Coefficients = self.Generate_Random_Coefficients(order)
+		if len(coefficients) == 0:
+			self.Coefficients = self.Generate_Random_Coefficients(order)
+		else:
+			self.Coefficients = coefficients
 		self.Derivative = self.Differentiate(self.Coefficients)
 		self.SecondDerivative = self.Differentiate(self.Derivative)
 
@@ -119,6 +122,11 @@ class Polynomial:
 			
 		return Value
 
+	def Evaluate_Self(self,x):
+		Value = 0
+		for i in range(0,len(self.Coefficients)):
+			Value+=self.Coefficients[i]*(x**i)
+		return Value
 	def Newtons_Method(self, A):
 		Tolerance = 100
 		Roots = []

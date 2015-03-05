@@ -5,19 +5,29 @@ from pylab import *
 from optparse import OptionParser
 from numpy import *
 from random import *
+from Polynomials import *
 import os
 
 figures = []
 
 def Abs_Extrema(F, Range):
-	DF = Differentiate(F):
-	F_X_Min = Evaluate(F, Range[0])
-	F_X_Max = Evaluate(F, Range[1])
-	Roots = Zeros(F)
+	F_X_Min = F.Evaluate_Self(Range[0])
+	F_X_Max = F.Evaluate_Self(Range[1])
+	Roots = F.Newtons_Method(F)
+	print Roots, 'Root.....'
 	Root_Values = []
-	for Root in Roots:
-		Root_Values.append([Root, Evaluate(F, Root)])
-	
+	for R in Roots:
+		Root_Values.append([R, F.Evaluate_Self(R)])
+	Root_Values.append([Range[0], F_X_Min])
+	Root_Values.append([Range[1], F_X_Max])
+	Abs_Minimum = Root_Values[0][1] 
+	Abs_Maximum = Root_Values[0][1]
+	for Array in Root_Values:
+		if Array[1] < Abs_Minimum:
+			Abs_Minimum = Array[1]
+		if Array[1] > Abs_Maximum:
+			Abs_Maximum = Array[1]
+	return[Abs_Minimum, Abs_Maximum]	
 	
 	
 
@@ -36,13 +46,15 @@ for i in range (0,10):
 	print X_LOW, X_HIGH
 	x = linspace(X_LOW,X_HIGH)
 	y = a*x*x+b*x+c
-	Polynomial = [a,b,c]
-	[Y_LOW, Y_HIGH] = Abs_Extrema(Polynomial)
+	Poly1 = Polynomial(2, [a,b,c])
+	Extrema = Abs_Extrema(Poly1, [X_LOW, X_HIGH])
+	Y_LOW = Extrema[0]
+	Y_HIGH = Extrema[1]
+	print Y_LOW, Y_HIGH, 'Extrema'
 	plot(x,y)
 	xlim(X_LOW, X_HIGH)
-	ylim(Y_LOW, Y_HIGH)
-	axis('equal')
+	#ylim(Y_LOW, Y_HIGH)
 	grid()
 	legend()
-	savefig('foo'+str(i)+'.png')
+	savefig('Images/foo'+str(i)+'.png')
 
