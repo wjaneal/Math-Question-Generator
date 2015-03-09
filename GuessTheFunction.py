@@ -39,32 +39,93 @@ def Abs_Extrema(F, Range):
 	return[Abs_Minimum, Abs_Maximum]	
 	
 def Plot_Function(x,y, Limits, FunctionAttributes):
+	X_LOW = Limits[0]
+	X_HIGH = Limits[1]
+	Y_LOW = Limits[2]
+	Y_HIGH = Limits[3]
 	clf()
 	fig = figure(1, figsize=(6,6))
 	ax = fig.add_subplot(111)
-	ax1.set_ylabel(FunctionAttributes['Y_Axis_Name'])
-	ax1.set_xlabel(FunctionAttributes['X_Axis_Name'])
-	ax1.set_title(FunctionAttributes['Name'])
-	
-#Generate a Random Function:
-a = int(random()*21)-10.0
-b = int(random()*21)-10.0
-c = int(random()*21)-10.0
-if a== 0:
-	a== 1
+	ax.set_ylabel(FunctionAttributes['Y_Axis_Name'])
+	ax.set_xlabel(FunctionAttributes['X_Axis_Name'])
+	ax.set_title(FunctionAttributes['Graph_Title'])
+	plot(x,y)
+	xlim(X_LOW, X_HIGH)
+	ylim(Y_LOW, Y_HIGH)
+	grid()
+	legend()
+	savefig('Images/'+ FunctionAttributes['File_Name'])
 
-X_LOW = -b/(2*a)-GraphRange/2.0-GraphPadding*(GraphRange)
-X_HIGH = -b/(2*a)+GraphRange/2.0+GraphPadding*(GraphRange)
-x = linspace(X_LOW,X_HIGH)
-y = a*x*x+b*x+c
-Poly1 = Polynomial(2, [c, b, a])
-Extrema = Abs_Extrema(Poly1, [X_LOW, X_HIGH])
-Y_LOW = Extrema[0]-GraphPadding*(Extrema[1]-Extrema[0])
-Y_HIGH = Extrema[1]+GraphPadding*(Extrema[1]-Extrema[0])
-Limits = [X_LOW, X_HIGH, Y_LOW, Y_HIGH]
+def Plot_Functions(Polynomial_Collection, GraphRange, GraphPadding, GraphName):
+	clf()
+	for Polynomial in Polynomial_Collection:
+		[x, y, Limits, FunctionAttributes] = SetQuadraticParameters(Polynomial.Coefficients, GraphRange, GraphPadding, GraphName)
+		try:
+			MasterLimits
+		except:
+			MasterLimits = Limits
+		if Limits[0]<MasterLimits[0]:
+			MasterLimits[0] = Limits[0]
+		if Limits[1]>MasterLimits[1]:
+			MasterLimits[1] = Limits[1]
+		if Limits[2]<MasterLimits[2]:
+			MasterLimits[2] = Limits[2]
+		if Limits[3]>MasterLimits[3]:
+			MasterLimits[3] = Limits[3]
+		plot(x,y)
+	xlim(MasterLimits[0], MasterLimits[1])
+	ylim(MasterLimits[2], MasterLimits[3])
+	grid()
+	legend()
+	savefig('Images/'+FunctionAttributes['File_Name'])
+	
+
+#Generate a Random Function:
+def GenerateRandomPolynomial(Order, Low, High):
+	Poly = []
+	for i in range(0, Order+1):	
+		Poly.append(int(random()*(High-Low))+Low)
+	print Poly
+	if Poly[Order] == 0:
+		Poly[Order] = 1
+	return Poly
+
+def SetQuadraticParameters(Poly, GraphRange, GraphPadding, GraphName):
+	a = Poly[2]
+	b = Poly[1]
+	c = Poly[0]
+	X_LOW = -b/(2*a)-GraphRange/2.0-GraphPadding*(GraphRange)
+	X_HIGH = -b/(2*a)+GraphRange/2.0+GraphPadding*(GraphRange)
+	x = linspace(X_LOW,X_HIGH)
+	y = x*x+b*x+c
+	#y = a*x*x+b*x+c
+	Poly1 = Polynomial(2, [c, b, a])
+	Extrema = Abs_Extrema(Poly1, [X_LOW, X_HIGH])
+	Y_LOW = Extrema[0]-GraphPadding*(Extrema[1]-Extrema[0])
+	Y_HIGH = Extrema[1]+GraphPadding*(Extrema[1]-Extrema[0])
+	Limits = [X_LOW, X_HIGH, Y_LOW, Y_HIGH]
+	FunctionAttributes = {'Graph_Title': 'Plot of Quadratic Function', 'X_Axis_Name': 'X-Axis', 'Y_Axis_Name': 'Y-Axis', 'File_Name':GraphName}
+	return [x,y, Limits, FunctionAttributes]
+
 #Create a Plot of the Function:
-FunctionAttributes = {'Graph_Title'=>'Plot of Quadratic Function', 'X_Axis_Name'=>'X-Axis', 'Y_Axis_Name'=>'Y-Axis'}
+
+GraphName = "OriginalGraph"
+Poly1 = GenerateRandomPolynomial(2, -10, 10)
+[x, y, Limits, FunctionAttributes] = SetQuadraticParameters(Poly1, GraphRange, GraphPadding, GraphName)
 Plot_Function(x, y, Limits, FunctionAttributes)
+
+NumStudents = input('Please enter the number of students')
+PolynomialCollection = [Polynomial(2,Poly1)]
+for i in range(0, NumStudents):
+	print "Student "+str(i)+ ", please enter your coefficients."
+	a = input('a: ')
+	b = input('b: ')
+	c = input('c: ')
+	PolynomialCollection.append(Polynomial(2, [c,b,a]))
+GraphName = "Comparison"
+Plot_Functions(PolynomialCollection, GraphRange, GraphPadding, GraphName)
+
+
 	
 '''
 # Make a square figure and axes
